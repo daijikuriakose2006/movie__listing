@@ -24,9 +24,7 @@ export default function App() {
   // Theme State
   const [isLightTheme, setIsLightTheme] = useState(false);
 
-  // Get API key from Vite environment or default key
-  //const API_KEY = import.meta.env.VITE_OMDB_API_KEY || 'e038db8a';
-  //const BASE_URL = `https://www.omdbapi.com/?apikey=${API_KEY}`;
+  // Get API key from Vite environment
 
   const API_KEY = import.meta.env.VITE_OMDB_API_KEY?.trim();
   const BASE_URL = API_KEY ? `https://www.omdbapi.com/?apikey=${API_KEY}` : null;
@@ -48,6 +46,12 @@ export default function App() {
   const fetchMovies = useCallback(async (query, type = '') => {
     setLoading(true);
     setError(null);
+    if (!BASE_URL) {
+      setMovies([]);
+      setError('OMDb API key is not configured. Please add VITE_OMDB_API_KEY in Vercel.');
+      setLoading(false);
+      return;
+    }
     try {
       let url = `${BASE_URL}&s=${encodeURIComponent(query)}`;
       if (type) {
@@ -73,6 +77,11 @@ export default function App() {
   // Fetch Movie Details
   const fetchMovieDetails = useCallback(async (imdbID) => {
     setDetailsLoading(true);
+    if (!BASE_URL) {
+      console.error('OMDb API key is not configured. Please add VITE_OMDB_API_KEY in Vercel.');
+      setDetailsLoading(false);
+      return;
+    }
     try {
       const response = await fetch(`${BASE_URL}&i=${imdbID}&plot=full`);
       const data = await response.json();

@@ -25,9 +25,12 @@ export default function App() {
   const [isLightTheme, setIsLightTheme] = useState(false);
 
   // Get API key from Vite environment or default key
-  const API_KEY = import.meta.env.VITE_OMDB_API_KEY || 'e038db8a';
-  const BASE_URL = `https://www.omdbapi.com/?apikey=${API_KEY}`;
+  //const API_KEY = import.meta.env.VITE_OMDB_API_KEY || 'e038db8a';
+  //const BASE_URL = `https://www.omdbapi.com/?apikey=${API_KEY}`;
 
+  const API_KEY = import.meta.env.VITE_OMDB_API_KEY?.trim();
+  const BASE_URL = API_KEY ? `https://www.omdbapi.com/?apikey=${API_KEY}` : null;
+  
   // Toggle Theme helper
   const toggleTheme = () => {
     setIsLightTheme((prev) => {
